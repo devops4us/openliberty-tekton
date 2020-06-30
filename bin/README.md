@@ -1,8 +1,3 @@
-##Errata
-
-* src/test/java Package structure does not fit folder structure
-* markdown link errors in README.md
-
 # Build a CI/CD Tekton Pipeline for deploying an OpenLiberty application
 
 ![IBM](./images/os-logo.jpg?raw=true "IBM")
@@ -40,11 +35,11 @@ It should take you approximately 1 hour to provision the OpenShift / K8s cluster
 
 ## Steps
 
-* [Create a Cloud-native CI/CD Pipeline on OpenShift 4.3]
+* [Create a Cloud-native CI/CD Pipeline on OpenShift 4.3](#cloud-native-cicd-pipeline-on-openshift-43)
 
-* [Create a Cloud-native CI/CD Pipeline on Kubernetes 1.16+]
+* [Create a Cloud-native CI/CD Pipeline on Kubernetes 1.16+](#cloud-native-cicd-pipeline-on-kubernetes-117)
 
-* [Create a WebHook connection from Git to our CI/CD Pipeline]
+* [Create a WebHook connection from Git to our CI/CD Pipeline](#create-a-webhook-connection-from-a-git-repo)
 
 * [Create a cleanup job for CI/CD Pipelines](#configure-cleanup-cronjob)
 

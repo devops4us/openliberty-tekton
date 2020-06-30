@@ -1,0 +1,57 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: liberty-app
+  labels:
+    app: liberty-app
+spec:
+  type: NodePort
+  ports:
+    - port: 9080 
+      name: liberty-app
+      nodePort: 32427
+  selector:
+    app: liberty-app
+---
+
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: liberty-app
+  labels:
+    app: liberty-app
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: liberty-app
+  template:
+    metadata:
+      labels:
+        app: liberty-app
+    spec:
+      terminationGracePeriodSeconds: 60
+      containers:
+      - name: liberty-app
+        image: us.icr.io/cloud-images/liberty-app:latest
+        env:
+          - name: ENVIRONMENT
+            value: "DEV"
+        imagePullPolicy: "Always"
+        ports:
+        - containerPort: 9080
+        readinessProbe:
+          httpGet:
+            path: /health
+            port: 9080
+          initialDelaySeconds: 60
+          periodSeconds: 60
+        livenessProbe:
+          httpGet:
+            path: /
+            port: 9080
+          initialDelaySeconds: 30
+          periodSeconds: 60 
+      imagePullSecrets:
+        - name: default-us-icr-io
+         

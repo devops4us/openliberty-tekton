@@ -1,0 +1,33 @@
+apiVersion: tekton.dev/v1alpha1
+kind: Task
+metadata:
+  name: deploy-liberty-app
+spec:
+  inputs:
+    resources:
+      - name: source
+        type: git
+    params:
+      - name: DEPLOY_ENVIRONMENT
+        description: The environment where you deploy the app
+        default: 'env-dev'
+        type: string  
+  steps: 
+    - name: deploy-resources
+      image: lachlanevenson/k8s-kubectl
+      command: ["kubectl"]
+      args:
+        - "apply"
+        - "-f"
+        - "$(inputs.resources.source.path)/ci-cd-pipeline/tekton-kubernetes/deploy-dev.yaml"
+        - "-n"
+        - "$(inputs.params.DEPLOY_ENVIRONMENT)"
+    - name: deploy-application
+      image: lachlanevenson/k8s-kubectl
+      command: ["kubectl"]
+      args:
+        - "rollout"
+        - "restart"
+        - "deployment/liberty-app"
+        - "-n"
+        - "$(inputs.params.DEPLOY_ENVIRONMENT)"

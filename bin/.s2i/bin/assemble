@@ -1,0 +1,17 @@
+#!/bin/bash
+
+echo "----------------------------------------------------------"
+echo check war artefacts
+ls -l /tmp/src/target/*.war
+echo "----------------------------------------------------------"
+echo check config artefacts
+ls -l /tmp/src/src/main/liberty/config/*.xml
+echo "----------------------------------------------------------"
+echo copy war files to dropins
+cp /tmp/src/target/*.war /config/dropins/
+echo "----------------------------------------------------------"
+echo copy config files to config
+cp /tmp/src/src/main/liberty/config/*.xml /config
+echo "----------------------------------------------------------"
+
+exit $rc

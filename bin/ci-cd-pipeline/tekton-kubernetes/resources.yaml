@@ -1,0 +1,35 @@
+apiVersion: tekton.dev/v1alpha1
+kind: PipelineResource
+metadata:
+  name: liberty-git
+spec:
+  type: git
+  params:
+    - name: revision
+      value: master
+    - name: url
+      value: https://github.com/vladsancira/openliberty-tekton.git
+    - name: httpsProxy
+      value: "10.7.17.17:8080"  
+---
+
+apiVersion: tekton.dev/v1alpha1
+kind: PipelineResource
+metadata:
+  name: liberty-image-dev
+spec:
+  type: image
+  params:
+    - name: url
+      value: us.icr.io/cloud-images/liberty-app:latest 
+---
+
+apiVersion: tekton.dev/v1alpha1
+kind: PipelineResource
+metadata:
+  name: liberty-image-stage
+spec:
+  type: image
+  params:
+    - name: url
+      value: us.icr.io/cloud-images/liberty-app:stage

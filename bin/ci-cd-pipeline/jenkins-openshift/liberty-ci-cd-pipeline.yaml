@@ -1,0 +1,29 @@
+kind: "BuildConfig"
+apiVersion: "v1"
+metadata:
+  name: "liberty-jenkins-pipeline"
+spec:
+  strategy:
+    type: JenkinsPipeline
+    jenkinsPipelineStrategy:
+      jenkinsfilePath: ci-cd-pipeline/openshift-jenkins/Jenkinsfile
+      env:
+        - name: DEV_PROJECT 
+          value: "env-dev"
+        - name: STAGE_PROJECT
+          value: "env-test"
+        - name: PROD_PROJECT
+          value: "env-prod"
+        - name: APP_NAME
+          value: "liberty-jenkins"
+        - name: APP_VERSION
+          value: "1.0"
+  source:
+    type: Git
+    git:
+      uri: 'https://github.com/vladsancira/openliberty-tekton.git'
+  triggers:
+    - type: GitHub
+      github:
+        secretReference:
+          name: githubkey

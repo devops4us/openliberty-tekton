@@ -1,0 +1,75 @@
+apiVersion: tekton.dev/v1alpha1
+kind: Task
+metadata:
+  name: build-liberty-app
+spec:
+  inputs:
+    resources:
+      - name: source
+        type: git
+  outputs:
+    resources:
+      - name: image
+        type: image
+  volumes:
+      - name: shared-storage
+        emptyDir: {} 
+  steps:
+     - name: build-code
+       image: maven:3.6.3-ibmjava-8       
+       script: |
+         #!/usr/bin/env bash
+         set -xe
+         mvn --version 
+         java -version
+         echo '-----------------------------------------------------'
+         mvn clean package -f ./source/pom.xml --settings ./source/.m2/settings.xml
+         echo '-----------------------------------------------------'         
+         cp    ./source/target/*.war                 /artefacts/
+         cp -r ./source/src/main/liberty/config/*    /artefacts/
+         cp    ./source/src/main/liberty/run.sh      /artefacts/
+       volumeMounts:
+         - name: shared-storage
+           mountPath: /artefacts
+
+     - name: test-code
+       image: maven:3.6.3-ibmjava-8
+       script: |
+         #!/usr/bin/env bash
+         set -xe
+         mvn --version
+         java -version
+         echo '-----------------------------------------------------'
+         mvn clean test -f ./source/pom.xml --settings ./source/.m2/settings.xml
+         echo '-----------------------------------------------------'
+         ls -l /artefacts/*
+       volumeMounts:
+         - name: shared-storage
+           mountPath: /artefacts
+
+     - name: deploy-to-nexus
+       image: maven:3.6.3-ibmjava-8
+       script: |
+         #!/usr/bin/env bash
+         set -xe
+         mvn --version
+         java -version
+         echo '-----------------------------------------------------'
+         #mvn clean deploy -f ./source/pom.xml --settings ./source/.m2/settings.xml
+         echo '-----------------------------------------------------'
+         ls -l /artefacts/*
+       volumeMounts:
+         - name: shared-storage
+           mountPath: /artefacts
+
+     - name: create-image
+       image: gcr.io/kaniko-project/executor
+       command:
+         - /kaniko/executor
+       args:
+         - "--dockerfile=./source/ci-cd-pipeline/tekton-kubernetes/Dockerfile"
+         - "--destination=$(outputs.resources.image.url)"
+         - "--context=$(inputs.resources.source.path)/"
+       volumeMounts:
+         - name: shared-storage
+           mountPath: /workspace/source/ci-cd-pipeline/kubernetes-tekton/artefacts
