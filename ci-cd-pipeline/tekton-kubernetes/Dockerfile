@@ -1,6 +1,5 @@
 FROM websphere-liberty:20.0.0.5-full-java8-ibmjava
 
-
 RUN  mkdir -p /opt/ibm/wlp/etc
 RUN  installUtility install --acceptLicense defaultServer
 

@@ -46,29 +46,29 @@ spec:
           - name: source
             resource: liberty-git
 
-    - name: test
-      taskRef:
-        name: test-liberty-app
-      runAfter:
-        - deploy
-      params:
-        - name: DEPLOY_ENVIRONMENT
-          value: "$(params.DEPLOY_ENVIRONMENT)"
-
-    - name: promote
-      taskRef:
-        name: promote-liberty-app
-      runAfter:
-        - test
-      params:
-        - name: PROMOTE_ENVIRONMENT
-          value: "$(params.PROMOTE_ENVIRONMENT)"
-      resources:
-        inputs:
-          - name: source
-            resource: liberty-git
-          - name: image
-            resource: liberty-image-dev
-        outputs:
-          - name: image
-            resource: liberty-image-stage
+#   - name: test
+#     taskRef:
+#       name: test-liberty-app
+#     runAfter:
+#       - deploy
+#     params:
+#       - name: DEPLOY_ENVIRONMENT
+#         value: "$(params.DEPLOY_ENVIRONMENT)"
+#
+#   - name: promote
+#     taskRef:
+#       name: promote-liberty-app
+#     runAfter:
+#       - test
+#     params:
+#       - name: PROMOTE_ENVIRONMENT
+#         value: "$(params.PROMOTE_ENVIRONMENT)"
+#     resources:
+#       inputs:
+#         - name: source
+#           resource: liberty-git
+#         - name: image
+#           resource: liberty-image-dev
+#       outputs:
+#         - name: image
+#           resource: liberty-image-stage

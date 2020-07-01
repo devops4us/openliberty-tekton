@@ -8,9 +8,7 @@ spec:
     - name: revision
       value: master
     - name: url
-      value: https://github.com/vladsancira/openliberty-tekton.git
-    - name: httpsProxy
-      value: "10.7.17.17:8080"  
+      value: https://github.com/devops4us/openliberty-tekton.git
 ---
 
 apiVersion: tekton.dev/v1alpha1
@@ -21,7 +19,7 @@ spec:
   type: image
   params:
     - name: url
-      value: us.icr.io/cloud-images/liberty-app:latest 
+      value: us.icr.io/amsit/liberty-app:latest 
 ---
 
 apiVersion: tekton.dev/v1alpha1
@@ -32,4 +30,4 @@ spec:
   type: image
   params:
     - name: url
-      value: us.icr.io/cloud-images/liberty-app:stage
+      value: us.icr.io/amsit/liberty-app:stage

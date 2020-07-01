@@ -239,6 +239,7 @@ kubectl apply -f ci-cd-pipeline/tekton-kubernetes/service-account-binding.yaml -
 
 
 1. Create Tekton resources , taks and pipeline:
+
 ```
 kubectl create -f ci-cd-pipeline/tekton-kubernetes/resources.yaml          -n env-ci
 kubectl create -f ci-cd-pipeline/tekton-kubernetes/task-build.yaml         -n env-ci
