@@ -1,6 +1,7 @@
 ##Errata
 
 * src/test/java Package structure does not fit folder structure
+* File `ci-ci-pipeline/tekton-triggers/webhook-event-listener-kubernetes.yaml`: Field `spec/serviceType` must be set to `NodePort`. 
 * markdown link errors in README.md
 
 # Build a CI/CD Tekton Pipeline for deploying an OpenLiberty application
@@ -195,6 +196,7 @@ cd openliberty-tekton
 ```
 
 2. Install Tekton pipelines in default `tekton-pipelines` namespace :
+
 ```
 kubectl apply --filename https://storage.googleapis.com/tekton-releases/pipeline/latest/release.yaml
 kubectl get pods --namespace tekton-pipelines
@@ -250,28 +252,34 @@ kubectl create -f ci-cd-pipeline/tekton-kubernetes/pipeline.yaml           -n en
 ```
 
 2. Execute Pipeline via Pipeline Run and watch :
+
 ```
 kubectl create -f ci-cd-pipeline/tekton-kubernetes/pipeline-run.yaml -n env-ci
 kubectl get pipelinerun -n env-ci -w
 ```
 
 3. Check Pods and logs :
+
 ```
 kubectl get pods                             -n env-dev
 kubectl logs liberty-app-76fcdc6759-pjxs7 -f -n env-dev
 ```
 Optional : create Horizontal Pod Autoscaler :
+
 ```
 kubectl autoscale deploy liberty-app  --min=1 --max=2 --cpu-percent=90 -n env-dev
 kubectl autoscale deploy liberty-app  --min=1 --max=2 --cpu-percent=90 -n env-stage
-``` 
+```
+
 
 4. View the OpenLiberty application health status:
 
 Retrieve the Kubernetes cluster `EXTERNAL-IP` using following command:
+
 ```
 kubectl get nodes -o wide
 ```
+
 Then open following URL in a Browser to view the OpenLiberty application UI :
 - from `DEV` environment:  `http://<EXTERNAL-IP>:32427/health`
 - from `STAGE` environment:  `http://<EXTERNAL-IP>:32527/health`
@@ -312,6 +320,7 @@ Finally, the new `PipelineRun` will be triggered automatically and visible in th
 ### For Kubernetes:
 
 1. Install Tekton Dashboard and Tekton Triggers
+
 ```
 kubectl apply -f https://github.com/tektoncd/dashboard/releases/download/v0.6.1.2/tekton-dashboard-release.yaml
 kubectl apply -f https://storage.googleapis.com/tekton-releases/triggers/latest/release.yaml
@@ -319,6 +328,7 @@ kubectl apply -f ci-cd-pipeline/tekton-triggers/tekton-dashboard.yaml -n tekton-
 ```
 
 2. Create a new ServiceAccount, Role and RoleBinding. In K8s this new ServiceAccount will be used for running the EventListener and starting the PipelineRun via the TriggerTemplate. The actual Pipeline will still run as the ServiceAccount defined in it.
+
 ```
 kubectl apply  -f ci-cd-pipeline/tekton-triggers/webhook-service-account.yaml  -n env-ci
 ```
@@ -326,15 +336,17 @@ kubectl apply  -f ci-cd-pipeline/tekton-triggers/webhook-service-account.yaml  -
 3. Create Pipeline's trigger_template, trigger_binding & event_listener<br>
 ( by default Event Listener service type is ClusterIP , but we set it to NodePort so it can be triggered from outside cluster )
 
+
 ```
 kubectl apply -f ci-cd-pipeline/tekton-triggers/webhook-event-listener-kubernetes.yaml -n env-ci 
 ```
 
 4. Get `el-liberty-pipeline-listener` Service  PORT and cluster `EXTERNAL-IP`
+
 ```
 kubectl get svc el-liberty-pipeline-listener -n env-ci
 kubectl get nodes -o wide 
-``` 
+```
 
 5. Add 'http://<EXTERNAL-IP>>:<EVENT_LISTNER_PORT>' to GitHib as WebHook. Then perform a push.
 

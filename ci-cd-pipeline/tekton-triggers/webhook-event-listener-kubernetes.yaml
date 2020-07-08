@@ -4,10 +4,11 @@ metadata:
   name: liberty-pipeline-listener
 spec:
   serviceAccountName: pipeline-trigger-sa
+  serviceType: NodePort
   triggers:
     - name: liberty-pipeline-trigger
       bindings:
-        - name: liberty-pipeline-binding
+        - ref: liberty-pipeline-binding
       template:
         name: liberty-pipeline-template
 ---
