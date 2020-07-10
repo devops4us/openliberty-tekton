@@ -25,4 +25,4 @@ kubectl create -f ci-cd-pipeline/tekton-kubernetes/task-build.yaml         -n en
 kubectl create -f ci-cd-pipeline/tekton-kubernetes/task-deploy.yaml        -n env-ci
 kubectl create -f ci-cd-pipeline/tekton-kubernetes/pipeline.yaml           -n env-ci
 kubectl create -f ci-cd-pipeline/tekton-kubernetes/pipeline-run.yaml -n env-ci
-tkn pr logs -n env-ci -f
+tkn pr logs -n env-ci -f 
