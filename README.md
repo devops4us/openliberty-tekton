@@ -1,5 +1,6 @@
 ##Errata
 
+
 * src/test/java Package structure does not fit folder structure
 * File `ci-ci-pipeline/tekton-triggers/webhook-event-listener-kubernetes.yaml`: Field `spec/serviceType` must be set to `NodePort`. 
 * markdown link errors in README.md
